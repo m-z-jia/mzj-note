@@ -2,12 +2,21 @@ name: Deploy to GitHub Pages
 
 on:
   push:
-    branches: [ master ]  # 推送到 main 分支时触发
-  workflow_dispatch:   # 允许手动触发
+    branches: [master] # 与你的本地分支一致
+  workflow_dispatch:
+
+# 关键：给 workflow 授予 Pages 部署权限
+permissions:
+  contents: read
+  pages: write
+  id-token: write
 
 jobs:
   deploy:
     runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -17,17 +26,17 @@ jobs:
       - name: Install Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: 22  # 用新版 Node
+          node-version: 22
+          cache: "npm"
 
       - name: Install dependencies
-        run: npm install
+        run: npm ci
 
       - name: Build VuePress site
-        run: npm run build  # 对应 package.json 的 scripts
+        run: npm run build
 
       - name: Deploy to GitHub Pages
-        uses: peaceiris/actions-gh-pages@v4
+        uses: actions/deploy-pages@v4 # GitHub 官方部署 Action，彻底解决权限问题
         with:
+          artifact_name: github-pages
           github_token: ${{ secrets.GITHUB_TOKEN }}
-          publish_dir: docs/.vuepress/dist  # 构建产物目录
-          publish_branch: gh-pages          # 部署到这个分支
