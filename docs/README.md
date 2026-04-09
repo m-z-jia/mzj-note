@@ -2,10 +2,10 @@
 # 首页配置（VuePress 自动识别）
 home: true
 heroText: 我的个人笔记站
-heroImage: /aseets/img/logo.png
+heroImage: /img/logo.png
 tagline: 学习、记录、成长
 actionText: 开始阅读 →
-actionLink: /notes/mzj
+actionLink: /notes/first.md
 features:
   - title: 前端学习
     details: HTML、CSS、JS、Vue、React 知识点整理
